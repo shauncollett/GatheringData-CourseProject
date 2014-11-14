@@ -37,7 +37,7 @@ for(i in data_types){
     rm(x_data)
     rm(y_data)
 }
-dataset <- merge(dataset, activity_labels, by="activity_id")
+dataset <- merge(activity_labels, dataset, by="activity_id")
 
 #rm(list=ls())
 #print(object.size(dataset),units="Mb")
