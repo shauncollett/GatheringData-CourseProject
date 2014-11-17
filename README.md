@@ -14,4 +14,4 @@ To execute the script, you must:
 run_analysis.R will export a tidy dataset into tidy.txt at the root of the repo, with the following variables:
 * activity_name: a descriptive name given to each activity the volunteer performed.
 * subject_id: volunteer id.
-* mean and standard deviation measurements: for each variable, this is the mean of either the mean or standard deviation as noted in the variable's name.  The variable name is descriptive of the source and type of mesaurement.  For more information on the feature names, please see features_info.txt and features.txt file in the root of the data directory.
+* mean and standard deviation measurements: for each variable, this is the mean of either the mean or standard deviation as noted in the variable's name.  The variable name is descriptive of the source and type of mesaurement - source being the accelerometer or gyroscope.  For more information on the feature names, please see features_info.txt and features.txt file in the root of the data directory.  I also recommend reading the README.txt, located in the root of the data directory.
