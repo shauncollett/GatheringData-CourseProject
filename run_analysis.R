@@ -7,7 +7,7 @@ library(dplyr)
 # Plan to loop through each data set type to combine
 data_types <- c("test","train")
 dataset_names <- c("subject_id", "activity_id")
-# Load activity labels to later integrate into combined data set
+# Use descriptive labels for activities and variables
 activity_labels <- read.csv("activity_labels.txt", header=FALSE, sep=" ")
 feature_labels <- read.csv("features.txt", header=FALSE, sep=" ")
 names(activity_labels) <- c("activity_id", "activity_name")
@@ -33,11 +33,20 @@ for(i in data_types){
         names(temp_data)[1:2] <- c(dataset_names)
         dataset <- rbind(dataset, temp_data)
     }
-    rm(subject_data)
-    rm(x_data)
-    rm(y_data)
+    rm(list=c("subject_data","x_data","y_data","temp_data"))
 }
 dataset <- merge(activity_labels, dataset, by="activity_id")
 
+# Melt and Die Cast data set to create an independent tidy data set with the
+#   average of each variable for each activity and each subject.
+datasetMelt <- melt(dataset, id=c("activity_id", "activity_name","subject_id"),
+                    measures.vars=names(dataset)[4:82])
+datasetData <- dcast(datasetMelt, activity_name + subject_id ~ variable, mean)
+# Write using write.table with row.names=FALSE
+write.table(datasetData, file="tidy.txt", row.names=FALSE)
+
+# Clean up variables
+rm(list=c("data_types","dataset_names","i","subject_file","x_file","y_file"))
+rm(list=c("activity_labels","feature_labels"))
 #rm(list=ls())
 #print(object.size(dataset),units="Mb")
