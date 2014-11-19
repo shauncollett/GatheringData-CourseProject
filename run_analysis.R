@@ -2,7 +2,14 @@
 ##  using the wearable's accelerometer and gyroscope.
 ## Script assumes the working directory has been preset to fit the dataset's
 ##  format.
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("stringr")) install.packages("stringr")
+if (!require("reshape")) install.packages("reshape")
+if (!require("reshape2")) install.packages("reshape2")
 library(dplyr)
+library(stringr)
+library(reshape)
+library(reshape2)
 ## Step 1: Load and combine test and training data sets.
 # Plan to loop through each data set type to combine
 data_types <- c("test","train")
@@ -36,12 +43,16 @@ for(i in data_types){
     rm(list=c("subject_data","x_data","y_data","temp_data"))
 }
 dataset <- merge(activity_labels, dataset, by="activity_id")
+# Format variable names to be more readable by lowering case and removing dots
+names(dataset) <- tolower(names(dataset))
+names(dataset) <- gsub("\\.","",names(dataset))
+names(dataset) <- gsub("_","",names(dataset))
 
 # Melt and Die Cast data set to create an independent tidy data set with the
 #   average of each variable for each activity and each subject.
-datasetMelt <- melt(dataset, id=c("activity_id", "activity_name","subject_id"),
+datasetMelt <- melt(dataset, id=c("activityid", "activityname","subjectid"),
                     measures.vars=names(dataset)[4:82])
-datasetData <- dcast(datasetMelt, activity_name + subject_id ~ variable, mean)
+datasetData <- dcast(datasetMelt, activityname + subjectid ~ variable, mean)
 # Write using write.table with row.names=FALSE
 write.table(datasetData, file="tidy.txt", row.names=FALSE)
 
@@ -49,4 +60,4 @@ write.table(datasetData, file="tidy.txt", row.names=FALSE)
 rm(list=c("data_types","dataset_names","i","subject_file","x_file","y_file"))
 rm(list=c("activity_labels","feature_labels"))
 #rm(list=ls())
-#print(object.size(dataset),units="Mb")
+#print(object.size(datasetMelt),units="Mb")
